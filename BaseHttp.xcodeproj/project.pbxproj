@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		55BA5E5F2189321A0029A979 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 55BA5E5E2189321A0029A979 /* main.cpp */; };
+		55BA5E67218933900029A979 /* AsyncGetClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 55BA5E65218933900029A979 /* AsyncGetClient.cpp */; };
+		55BA5E6A21894A0D0029A979 /* SyncGetClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 55BA5E6821894A0D0029A979 /* SyncGetClient.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +27,10 @@
 /* Begin PBXFileReference section */
 		55BA5E5B2189321A0029A979 /* BaseHttp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = BaseHttp; sourceTree = BUILT_PRODUCTS_DIR; };
 		55BA5E5E2189321A0029A979 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		55BA5E65218933900029A979 /* AsyncGetClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AsyncGetClient.cpp; sourceTree = "<group>"; };
+		55BA5E66218933900029A979 /* AsyncGetClient.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AsyncGetClient.hpp; sourceTree = "<group>"; };
+		55BA5E6821894A0D0029A979 /* SyncGetClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SyncGetClient.cpp; sourceTree = "<group>"; };
+		55BA5E6921894A0D0029A979 /* SyncGetClient.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SyncGetClient.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +64,10 @@
 			isa = PBXGroup;
 			children = (
 				55BA5E5E2189321A0029A979 /* main.cpp */,
+				55BA5E66218933900029A979 /* AsyncGetClient.hpp */,
+				55BA5E65218933900029A979 /* AsyncGetClient.cpp */,
+				55BA5E6921894A0D0029A979 /* SyncGetClient.hpp */,
+				55BA5E6821894A0D0029A979 /* SyncGetClient.cpp */,
 			);
 			path = BaseHttp;
 			sourceTree = "<group>";
@@ -118,6 +128,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55BA5E67218933900029A979 /* AsyncGetClient.cpp in Sources */,
+				55BA5E6A21894A0D0029A979 /* SyncGetClient.cpp in Sources */,
 				55BA5E5F2189321A0029A979 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -241,6 +253,12 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = HF4RL3535R;
+				"HEADER_SEARCH_PATHS[arch=*]" = /usr/local/Cellar/boost/1.67.0_1/include;
+				"LIBRARY_SEARCH_PATHS[arch=*]" = /usr/local/Cellar/boost/1.67.0_1/lib;
+				"OTHER_LDFLAGS[arch=*]" = (
+					"/usr/local/Cellar/boost/1.67.0_1/lib/libboost_system-mt.a",
+					"/usr/local/Cellar/boost/1.67.0_1/lib/libboost_thread-mt.a",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -250,6 +268,12 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = HF4RL3535R;
+				"HEADER_SEARCH_PATHS[arch=*]" = /usr/local/Cellar/boost/1.67.0_1/include;
+				"LIBRARY_SEARCH_PATHS[arch=*]" = /usr/local/Cellar/boost/1.67.0_1/lib;
+				"OTHER_LDFLAGS[arch=*]" = (
+					"/usr/local/Cellar/boost/1.67.0_1/lib/libboost_system-mt.a",
+					"/usr/local/Cellar/boost/1.67.0_1/lib/libboost_thread-mt.a",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

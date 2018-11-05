@@ -42,7 +42,7 @@ protected:
     // 连接
     virtual void handle_connect(const error_code_type& err);
     // 写入 request
-    void handle_write_request(const error_code_type& err);
+    virtual void handle_write_request(const error_code_type& err);
     // 读取response状态
     virtual void handle_read_status_line(const error_code_type& err);
     // 读取response header
@@ -51,7 +51,7 @@ protected:
     virtual void handle_read_content(const error_code_type& err);
     
 public:
-    AsyncGetClient(boost::asio::io_context&);
+    AsyncGetClient(boost::asio::io_context& io_context);
     
     //  www.boost.org /LICENSE_1_0.txt
     void get(const string& server, const string& path);

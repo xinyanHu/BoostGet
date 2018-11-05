@@ -26,6 +26,7 @@ void AsyncGetClient::get(const string &server, const string &path) {
                             boost::bind(&AsyncGetClient::handle_resolve, this,
                                         boost::asio::placeholders::error,
                                         boost::asio::placeholders::results));
+    
 }
 
 void AsyncGetClient::get(const string &server, const int port, const string &path) {
@@ -64,9 +65,6 @@ void AsyncGetClient::handle_connect(const boost::system::error_code& err) {
         boost::asio::async_write(socket_, request_,
                                  boost::bind(&AsyncGetClient::handle_write_request, this,
                                              boost::asio::placeholders::error));
-//        boost::asio::write(socket_, request_,
-//                           boost::bind(&AsyncGetClient::handle_write_request, this,
-//                                       boost::asio::placeholders::error));
     } else {
         std::cerr << "handle_connect Error: " << err.message() << std::endl;
     }
@@ -86,7 +84,7 @@ void AsyncGetClient::handle_write_request(const error_code_type& err) {
     }
 }
 
-void AsyncGetClient::AsyncGetClient::handle_read_status_line(const error_code_type& err) {
+void AsyncGetClient::handle_read_status_line(const error_code_type& err) {
     if (!err) {
         // Check that response is OK.
         std::istream response_stream(&response_);
@@ -101,8 +99,9 @@ void AsyncGetClient::AsyncGetClient::handle_read_status_line(const error_code_ty
             return;
         }
         if (status_code != 200){
-            std::cout << "Response returned with status code ";
-            std::cout << status_code << "\n";
+//            std::cout << "Response returned with status code ";
+//            std::cout << status_code << "\n";
+            std::cout <<  "Response returned with status code " + std::to_string(status_code) << std::endl;
             return;
         }
         

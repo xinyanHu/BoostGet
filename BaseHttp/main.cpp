@@ -18,7 +18,6 @@
 
 class getClient : public AsyncGetClient {
 protected:
-    std::deque<char> deque;
     std::stringstream ss;
     
     void handle_read_content(const boost::system::error_code& err) override {
@@ -49,19 +48,19 @@ protected:
         }
     }
 public:
-    getClient(boost::asio::io_context& io_context) : AsyncGetClient(io_context) {}
+//    getClient(boost::asio::io_context& io_context) : AsyncGetClient(io_context) {}
 };
 
 int main(int argc, const char * argv[]) {
+    boost::asio::io_context io;
+    
     try {
         boost::asio::io_context io;
         AsyncGetClient client1(io);
-        client1.get("iso.mirrors.ustc.edu.cn", "/qtproject/archive/qt/5.8/5.8.0/qt-opensource-mac-x64-clang-5.8.0.dmg");
-        boost::thread t(boost::bind(&boost::asio::io_context::run, &io));
+        client1.get("127.0.0.1", 7000, "/platform/visualization/getTree");
         io.run();
-        t.join();
-    } catch (std::exception& e) {
-        std::cerr << e.what() << std::endl;
+    } catch(std::exception& e) {
+        std::cerr << "------" << e.what() << std::endl;
     }
     return 0;
 }

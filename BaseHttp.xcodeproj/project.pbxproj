@@ -270,9 +270,9 @@
 				DEVELOPMENT_TEAM = HF4RL3535R;
 				"HEADER_SEARCH_PATHS[arch=*]" = /usr/local/Cellar/boost/1.67.0_1/include;
 				"LIBRARY_SEARCH_PATHS[arch=*]" = /usr/local/Cellar/boost/1.67.0_1/lib;
-				"OTHER_LDFLAGS[arch=*]" = (
-					"/usr/local/Cellar/boost/1.67.0_1/lib/libboost_system-mt.a",
+				OTHER_LDFLAGS = (
 					"/usr/local/Cellar/boost/1.67.0_1/lib/libboost_thread-mt.a",
+					"/usr/local/Cellar/boost/1.67.0_1/lib/libboost_system-mt.a",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

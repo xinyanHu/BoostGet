@@ -8,72 +8,74 @@
 
 #include "SyncGetClient.hpp"
 
-SyncGetClient::SyncGetClient(io_context_type& io_context) : resolver_(io_context), socket_(io_context) {}
-SyncGetClient::SyncGetClient(): resolver_(context_), socket_(context_){}
+SyncGetClient::SyncGetClient(io_context_type& io_context) : resolver_(io_context), socket_(io_context){}
+//SyncGetClient::SyncGetClient(): resolver_(context_), socket_(context_),
+//steady_timer(resolver_.get_io_context(), std::chrono::microseconds(50)){}
 
 void SyncGetClient::get(const string &server, const string &path) {
-    boost::asio::steady_timer steady_timer(context, std::chrono::seconds(1));
-    //    steady_timer.expires_after(std::chrono::milliseconds(6000));
+    boost::asio::steady_timer steady_timer(resolver_.get_io_context(), std::chrono::seconds(1));
     steady_timer.async_wait([&](const error_code_type code) {
-        std::cout << "timeout" << std::endl;
-        this->stopped_ = true;
-        this->socket_.close();
+        std::cout << "-------timeout-------";
+        socket_.close();
+        resolver_.get_io_context().stop();
+        resolver_.get_io_context().reset();
     });
-    
-    std::ostream request_stream(&request_);
-    request_stream << "GET " << path << " HTTP/1.0\r\n";
-    request_stream << "Host: " << server << "\r\n";
-    request_stream << "Accept: */*\r\n";
-    request_stream << "Connection: close\r\n\r\n";
-    handle_resolve(server);
-    // Run the operation until it completes, or until the timeout.
-     context.run();
+    try {
+        std::ostream request_stream(&request_);
+        request_stream << "GET " << path << " HTTP/1.0\r\n";
+        request_stream << "Host: " << server << "\r\n";
+        request_stream << "Accept: */*\r\n";
+        request_stream << "Connection: close\r\n\r\n";
+        handle_resolve(server);
+    } catch(std::exception& e) {
+        std::cerr << "sync exception: " << e.what() << std::endl;
+        resolver_.get_io_context().reset();
+    }
 }
 
 void SyncGetClient::get(const string& server, const int port, const string& path) {
-    std::ostream request_stream(&request_);
-    request_stream << "GET " << path << " HTTP/1.0\r\n";
-    request_stream << "Host: " << server + ":" + std::to_string(port) << "\r\n";
-    request_stream << "Accept: */*\r\n";
-    request_stream << "Connection: close\r\n\r\n";
-    handle_resolve(server, port);
+    try {
+        std::ostream request_stream(&request_);
+        request_stream << "GET " << path << " HTTP/1.0\r\n";
+        request_stream << "Host: " << server + ":" + std::to_string(port) << "\r\n";
+        request_stream << "Accept: */*\r\n";
+        request_stream << "Connection: close\r\n\r\n";
+        handle_resolve(server, port);
+    } catch(std::exception& e) {
+        std::cerr << "sync exception: " << e.what() << std::endl;
+        resolver_.get_io_context().reset();
+    }
 }
 
 void SyncGetClient::handle_resolve(const string &server) {
-    if (stopped_)
-        return;
+    
     // Get a list of endpoints corresponding to the server name.
     results_type endpoints = resolver_.resolve(server, "http");
     handle_connect(endpoints);
 }
 
 void SyncGetClient::handle_resolve(const string &server, const int port) {
-    if (stopped_)
-        return;
+    
     tcp::resolver::query query(server, std::to_string(port));
     results_type type = resolver_.resolve(query);
     handle_connect(type);
 }
 
 void SyncGetClient::handle_connect(const results_type& endpoints) {
-    if (stopped_)
-        return;
+    
     // Try each endpoint until we successfully establish a connection.
     boost::asio::connect(socket_, endpoints);
     handle_write_request();
 }
 
 void SyncGetClient::handle_write_request() {
-    if (stopped_)
-        return;
+    
     // Send the request.
     boost::asio::write(socket_, request_);
     handle_read_status_line();
 }
 
 void SyncGetClient::handle_read_status_line() {
-    if (stopped_)
-        return;
     // Read the response status line. The response streambuf will automatically
     // grow to accommodate the entire line. The growth may be limited by passing
     // a maximum size to the streambuf constructor.
@@ -97,8 +99,6 @@ void SyncGetClient::handle_read_status_line() {
 }
 
 void SyncGetClient::handle_read_headers(std::istream& response_stream) {
-    if (stopped_)
-        return;
     // Read the response headers, which are terminated by a blank line.
     boost::asio::read_until(socket_, response_, "\r\n\r\n");
     
@@ -111,17 +111,12 @@ void SyncGetClient::handle_read_headers(std::istream& response_stream) {
 }
 
 void SyncGetClient::handle_read_content() {
-    if (stopped_)
-        return;
-    try {
-        boost::system::error_code error;
-        while (boost::asio::read(socket_, response_,
-                                 boost::asio::transfer_at_least(1), error)) {
-                        std::cout << response_.size();
-        }
-        if (error != boost::asio::error::eof)
-            throw boost::system::system_error(error);
-    } catch (std::exception& e) {
-        std::cerr << e.what() << std::endl;
+    boost::system::error_code error;
+    while (boost::asio::read(socket_, response_,
+                             boost::asio::transfer_at_least(1), error)) {
+//        std::cout << response_.size();
     }
+    if (error != boost::asio::error::eof)
+        throw boost::system::system_error(error);
+    
 }

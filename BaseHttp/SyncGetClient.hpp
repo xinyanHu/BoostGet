@@ -31,13 +31,11 @@ class SyncGetClient {
     using string = std::string;
     
     bool stopped_ = false;
-    io_context_type context_;
     resolver_type resolver_;
     socket_type socket_;
     streambuf_type request_;
     streambuf_type response_;
 //    boost::asio::steady_timer steady_timer;
-    io_context_type context;
     
 public:
     SyncGetClient();

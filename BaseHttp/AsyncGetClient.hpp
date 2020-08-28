@@ -55,7 +55,7 @@ public:
     
     //  www.boost.org /LICENSE_1_0.txt
     void get(const string& server, const string& path);
-    // 127.0.0.1  8089 /SDXNY/tdfdscyb/getAllDq\?dq=1
+
     void get(const string& server, const int port, const string& path);
 };
 
